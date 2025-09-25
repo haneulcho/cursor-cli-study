@@ -52,86 +52,6 @@ const chosenTitleMotion = () => {
   }, 900);
 };
 
-const shortsMotion = () => {
-  const section1 = document.querySelector('.app-section.section1');
-  if (!section1) return;
-
-  const section1Height = section1.offsetHeight;
-
-  gsap.timeline({
-    scrollTrigger: {
-      trigger: '.app-section.section1',
-      start: `top+=${section1Height * 0.3}`,
-      end: 'bottom',
-      pinSpacing: false,
-      pin: true,
-      anticipatePin: 1,
-      pinType: 'fixed',
-      pinnedContainer: '.chosen',
-    },
-  });
-};
-
-const visualMotion = () => {
-  const section1 = document.querySelector(SELECTOR.section1);
-  if (!section1) return;
-
-  // 여기서 수치 조정
-  // 모바일 30%, PC 25% 지나면 가비<->아동 전환
-  const computeTriggerPoint = () => section1.offsetHeight * (isNarrow() ? 0.3 : 0.22);
-  let triggerPoint = computeTriggerPoint();
-
-  const onResize = rafThrottle(() => {
-    const isHeaderLoaded = $('#header').length > 0;
-    if (!isHeaderLoaded) return;
-
-    triggerPoint = computeTriggerPoint();
-  });
-
-  const onScroll = rafThrottle(() => {
-    // header가 로드되었는지 확인 (jQuery 객체 자체는 truthy이므로 length 검사)
-    const isHeaderLoaded = $('#header').length > 0;
-    const isPinSpacerLoaded = $('.pin-spacer').length > 0;
-
-    if (!isHeaderLoaded) return;
-
-    if (!isScrollTriggerLoaded && $('.section1').hasClass('active')) {
-      isScrollTriggerLoaded = true;
-      setTimeout(() => {
-        shortsMotion();
-      }, 300);
-    }
-
-    if (!hasUserScrolled) return; // 사용자 스크롤 전에는 동작하지 않음
-
-    const scrollTop = getScrollTop();
-    const $section1 = $(SELECTOR.section1);
-    if (scrollTop >= triggerPoint) {
-      // if (!isPinSpacerLoaded) return;
-      if (!$section1.hasClass('active')) {
-        $section1.addClass('active');
-      }
-    } else {
-      // if (!isPinSpacerLoaded) return;
-      $section1.removeClass('active');
-    }
-  });
-
-  // 최초 스크롤 감지 (한 번만)
-  window.addEventListener(
-    'scroll',
-    () => {
-      hasUserScrolled = true;
-    },
-    { once: true, passive: true }
-  );
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onResize, { passive: true });
-  // 초기 1회 평가
-  // onScroll은 실제 사용자 스크롤 이후에만 동작
-};
-
 // section3 가로 스크롤 기능
 const initSection3HorizontalScroll = () => {
   const section3 = document.querySelector(SELECTOR.section3Wrapper);
@@ -416,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 300);
 
   setTimeout(() => {
-    visualMotion();
     initSection3HorizontalScroll();
   }, 1500);
 });

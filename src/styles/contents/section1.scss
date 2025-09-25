@@ -85,11 +85,6 @@
     }
   }
 
-  .section1:not(.active) ~ .app-section.section2 .app-inner {
-    z-index: -1 !important;
-    opacity: 0 !important;
-  }
-
   @media (max-width: 767px) and (orientation: portrait) {
     .pin-spacer:has(.section1:not(.active)) {
       margin-bottom: vw(-200px) !important;
